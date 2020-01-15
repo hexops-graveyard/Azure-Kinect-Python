@@ -33,3 +33,7 @@ class StructureWithEnums(ctypes.Structure):
         return '\n'.join(result)
 
     __repr__ = __str__
+
+class CtypeIntEnum(enum.IntEnum):
+    def from_param(self):
+        return ctypes.c_int(int(self))

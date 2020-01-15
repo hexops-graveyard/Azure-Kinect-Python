@@ -3,7 +3,7 @@ import enum
 import sys
 
 from .pyk4a import k4a_float3_t, k4a_result_t, k4a_wait_result_t, k4a_calibration_t, k4a_capture_t, k4a_image_t
-from .enumstruct import StructureWithEnums
+from .enumstruct import StructureWithEnums, CtypeIntEnum
 
 try:
     _k4abt = ctypes.CDLL('k4abt.dll')
@@ -28,7 +28,7 @@ class _handle_k4abt_frame_t(StructureWithEnums):
     ]
 k4abt_frame_t = ctypes.POINTER(_handle_k4abt_frame_t)
 
-class k4abt_joint_id_t(enum.IntEnum):
+class k4abt_joint_id_t(CtypeIntEnum):
     K4ABT_JOINT_PELVIS = 0,
     K4ABT_JOINT_SPINE_NAVEL = 1,
     K4ABT_JOINT_SPINE_CHEST = 2,
@@ -63,13 +63,13 @@ class k4abt_joint_id_t(enum.IntEnum):
     K4ABT_JOINT_EAR_RIGHT = 31,
     K4ABT_JOINT_COUNT = 32
 
-class k4abt_sensor_orientation_t(enum.IntEnum):
+class k4abt_sensor_orientation_t(CtypeIntEnum):
     K4ABT_SENSOR_ORIENTATION_DEFAULT = 0,
     K4ABT_SENSOR_ORIENTATION_CLOCKWISE90 = 1,
     K4ABT_SENSOR_ORIENTATION_COUNTERCLOCKWISE90 = 2,
     K4ABT_SENSOR_ORIENTATION_FLIP180 = 3,
     
-class k4abt_tracker_processing_mode_t(enum.IntEnum):
+class k4abt_tracker_processing_mode_t(CtypeIntEnum):
     K4ABT_TRACKER_PROCESSING_MODE_GPU = 0,
     K4ABT_TRACKER_PROCESSING_MODE_CPU = 1,
 
@@ -99,7 +99,7 @@ class k4a_quaternion_t(ctypes.Union):
         ("v", ctypes.c_float * 4)
     ]
 
-class k4abt_joint_confidence_level_t(enum.IntEnum):
+class k4abt_joint_confidence_level_t(CtypeIntEnum):
     K4ABT_JOINT_CONFIDENCE_NONE = 0,
     K4ABT_JOINT_CONFIDENCE_LOW = 1,
     K4ABT_JOINT_CONFIDENCE_MEDIUM = 2,
@@ -123,7 +123,7 @@ class k4abt_skeleton_t(StructureWithEnums):
         ("joints", _k4abt_joint_t * k4abt_joint_id_t.K4ABT_JOINT_COUNT),
     ]
 
-class _k4abt_body_t(StructureWithEnums):
+class k4abt_body_t(StructureWithEnums):
     _fields_= [
         ("id", ctypes.c_uint32),
         ("skeleton", k4abt_skeleton_t),
