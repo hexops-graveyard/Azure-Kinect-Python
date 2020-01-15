@@ -7,6 +7,10 @@ This is a python port of the simple-sample project from.
 import traceback
 import sys
 import ctypes
+import os
+
+# Add .. to the import path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pyk4a
 
