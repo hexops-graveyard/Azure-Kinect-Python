@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pyk4a",
+    name="k4a",
     version="0.0.1",
     author="The HexOps Authors",
     author_email="stephen.gutekanst@gmail.com",

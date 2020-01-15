@@ -12,17 +12,17 @@ import os
 # Add .. to the import path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import pyk4a
+import k4a
 
 def VERIFY(result, error):
-    if result != pyk4a.k4a_result_t.K4A_RESULT_SUCCEEDED:
+    if result != k4a.k4a_result_t.K4A_RESULT_SUCCEEDED:
         print(error)
         traceback.print_stack()
         sys.exit(1)
 
 def print_body_information(body):
     print("Body ID: {}".format(body.id))
-    for i in range(pyk4a.k4abt_joint_id_t):
+    for i in range(k4a.k4abt_joint_id_t):
         position = body.skeleton.joints[i].positions
         orientation = body.skeleton.joints[i].orientation
         confidence_level = body.skeleton.joints[i].confidence_level
@@ -54,71 +54,71 @@ def print_body_index_map_middle_line(body_index_map):
     """
 
 if __name__ == "__main__":
-    device_config = pyk4a.K4A_DEVICE_CONFIG_INIT_DISABLE_ALL
-    device_config.depth_mode = pyk4a.k4a_depth_mode_t.K4A_DEPTH_MODE_NFOV_UNBINNED
+    device_config = k4a.K4A_DEVICE_CONFIG_INIT_DISABLE_ALL
+    device_config.depth_mode = k4a.k4a_depth_mode_t.K4A_DEPTH_MODE_NFOV_UNBINNED
 
-    device = pyk4a.k4a_device_t()
-    VERIFY(pyk4a.k4a_device_open(0, ctypes.byref(device)), "Open K4A Device failed!")
-    VERIFY(pyk4a.k4a_device_start_cameras(device, ctypes.byref(device_config)), "Start K4A cameras failed!")
+    device = k4a.k4a_device_t()
+    VERIFY(k4a.k4a_device_open(0, ctypes.byref(device)), "Open K4A Device failed!")
+    VERIFY(k4a.k4a_device_start_cameras(device, ctypes.byref(device_config)), "Start K4A cameras failed!")
 
-    sensor_calibration = pyk4a.k4a_calibration_t()
-    VERIFY(pyk4a.k4a_device_get_calibration(device, device_config.depth_mode, pyk4a.k4a_color_resolution_t.K4A_COLOR_RESOLUTION_OFF, ctypes.byref(sensor_calibration)), "Get depth camera calibration failed!")
+    sensor_calibration = k4a.k4a_calibration_t()
+    VERIFY(k4a.k4a_device_get_calibration(device, device_config.depth_mode, k4a.k4a_color_resolution_t.K4A_COLOR_RESOLUTION_OFF, ctypes.byref(sensor_calibration)), "Get depth camera calibration failed!")
     
-    tracker = pyk4a.k4abt_tracker_t()
-    tracker_config = pyk4a.K4ABT_TRACKER_CONFIG_DEFAULT
-    VERIFY(pyk4a.k4abt_tracker_create(ctypes.byref(sensor_calibration), tracker_config, ctypes.byref(tracker)), "Body tracker initialization failed!")
+    tracker = k4a.k4abt_tracker_t()
+    tracker_config = k4a.K4ABT_TRACKER_CONFIG_DEFAULT
+    VERIFY(k4a.k4abt_tracker_create(ctypes.byref(sensor_calibration), tracker_config, ctypes.byref(tracker)), "Body tracker initialization failed!")
 
     frame_count = 0
     while frame_count < 100:
-        sensor_capture = pyk4a.k4a_capture_t()
-        get_capture_result = pyk4a.k4a_device_get_capture(device, ctypes.byref(sensor_capture), pyk4a.K4A_WAIT_INFINITE)
+        sensor_capture = k4a.k4a_capture_t()
+        get_capture_result = k4a.k4a_device_get_capture(device, ctypes.byref(sensor_capture), k4a.K4A_WAIT_INFINITE)
 
-        if get_capture_result == pyk4a.k4a_wait_result_t.K4A_WAIT_RESULT_SUCCEEDED:
+        if get_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_SUCCEEDED:
             frame_count += 1
 
             print("Start processing frame {}".format(frame_count))
 
-            queue_capture_result = pyk4a.k4abt_tracker_enqueue_capture(tracker, sensor_capture, pyk4a.K4A_WAIT_INFINITE)
+            queue_capture_result = k4a.k4abt_tracker_enqueue_capture(tracker, sensor_capture, k4a.K4A_WAIT_INFINITE)
 
-            pyk4a.k4a_capture_release(sensor_capture)
+            k4a.k4a_capture_release(sensor_capture)
 
-            if queue_capture_result == pyk4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
+            if queue_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
                 # It should never hit timeout when K4A_WAIT_INFINITE is set.
                 print("Error! Add capture to tracker process queue timeout!")
                 break
-            elif queue_capture_result == pyk4a.k4a_wait_result_t.K4A_WAIT_RESULT_FAILED:
+            elif queue_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_FAILED:
                 print("Error! Add capture to tracker process queue failed!")
                 break
 
-            body_frame = pyk4a.k4abt_frame_t()
-            pop_frame_result = pyk4a.k4abt_tracker_pop_result(tracker, ctypes.byref(body_frame), pyk4a.K4A_WAIT_INFINITE)
-            if pop_frame_result == pyk4a.k4a_wait_result_t.K4A_WAIT_RESULT_SUCCEEDED:
-                num_bodies = pyk4a.k4abt_frame_get_num_bodies(body_frame)
+            body_frame = k4a.k4abt_frame_t()
+            pop_frame_result = k4a.k4abt_tracker_pop_result(tracker, ctypes.byref(body_frame), k4a.K4A_WAIT_INFINITE)
+            if pop_frame_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_SUCCEEDED:
+                num_bodies = k4a.k4abt_frame_get_num_bodies(body_frame)
                 print("{} bodies are detected!".format(num_bodies))
 
                 for i in range(num_bodies):
-                    body = pyk4a.k4abt_body_t()
-                    VERIFY(pyk4a.k4abt_frame_get_body_skeleton(body_frame, i, ctypes.byref(body.skeleton)), "Get body from body frame failed!")
-                    body.id = pyk4a.k4abt_frame_get_body_id(body_frame, i)
+                    body = k4a.k4abt_body_t()
+                    VERIFY(k4a.k4abt_frame_get_body_skeleton(body_frame, i, ctypes.byref(body.skeleton)), "Get body from body frame failed!")
+                    body.id = k4a.k4abt_frame_get_body_id(body_frame, i)
 
                     print_body_information(body)
                 
-                body_index_map = pyk4a.k4abt_frame_get_body_index_map(body_frame)
+                body_index_map = k4a.k4abt_frame_get_body_index_map(body_frame)
                 if body_index_map:
                     print_body_index_map_middle_line(body_index_map)
-                    pyk4a.k4a_image_release(body_index_map)
+                    k4a.k4a_image_release(body_index_map)
                 else:
                     print("Error: Fail to generate bodyindex map!")
 
-                pyk4a.k4abt_frame_release(body_frame)
-            elif pop_frame_result == pyk4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
+                k4a.k4abt_frame_release(body_frame)
+            elif pop_frame_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
                 # It should never hit timeout when K4A_WAIT_INFINITE is set.
                 print("Error! Pop body frame result timeout!")
                 break
             else:
                 print("Pop body frame result failed!")
                 break
-        elif get_capture_result == pyk4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
+        elif get_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
             # It should never hit timeout when K4A_WAIT_INFINITE is set.
             print("Error! Get depth frame time out!")
             break
@@ -127,8 +127,8 @@ if __name__ == "__main__":
 
     print("Finished body tracking processing!")
 
-    pyk4a.k4abt_tracker_shutdown(tracker)
-    pyk4a.k4abt_tracker_destroy(tracker)
-    pyk4a.k4a_device_stop_cameras(device)
-    pyk4a.k4a_device_close(device)
+    k4a.k4abt_tracker_shutdown(tracker)
+    k4a.k4abt_tracker_destroy(tracker)
+    k4a.k4a_device_stop_cameras(device)
+    k4a.k4a_device_close(device)
                     
