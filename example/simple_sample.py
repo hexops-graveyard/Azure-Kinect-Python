@@ -15,14 +15,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import k4a
 
 def VERIFY(result, error):
-    if result != k4a.k4a_result_t.K4A_RESULT_SUCCEEDED:
+    if result != k4a.K4A_RESULT_SUCCEEDED:
         print(error)
         traceback.print_stack()
         sys.exit(1)
 
 def print_body_information(body):
     print("Body ID: {}".format(body.id))
-    for i in range(k4a.k4abt_joint_id_t.K4ABT_JOINT_COUNT):
+    for i in range(k4a.K4ABT_JOINT_COUNT):
         position = body.skeleton.joints[i].position
         orientation = body.skeleton.joints[i].orientation
         confidence_level = body.skeleton.joints[i].confidence_level
@@ -55,14 +55,14 @@ def print_body_index_map_middle_line(body_index_map):
 
 if __name__ == "__main__":
     device_config = k4a.K4A_DEVICE_CONFIG_INIT_DISABLE_ALL
-    device_config.depth_mode = k4a.k4a_depth_mode_t.K4A_DEPTH_MODE_NFOV_UNBINNED
+    device_config.depth_mode = k4a.K4A_DEPTH_MODE_NFOV_UNBINNED
 
     device = k4a.k4a_device_t()
     VERIFY(k4a.k4a_device_open(0, ctypes.byref(device)), "Open K4A Device failed!")
     VERIFY(k4a.k4a_device_start_cameras(device, ctypes.byref(device_config)), "Start K4A cameras failed!")
 
     sensor_calibration = k4a.k4a_calibration_t()
-    VERIFY(k4a.k4a_device_get_calibration(device, device_config.depth_mode, k4a.k4a_color_resolution_t.K4A_COLOR_RESOLUTION_OFF, ctypes.byref(sensor_calibration)), "Get depth camera calibration failed!")
+    VERIFY(k4a.k4a_device_get_calibration(device, device_config.depth_mode, k4a.K4A_COLOR_RESOLUTION_OFF, ctypes.byref(sensor_calibration)), "Get depth camera calibration failed!")
     
     tracker = k4a.k4abt_tracker_t()
     tracker_config = k4a.K4ABT_TRACKER_CONFIG_DEFAULT
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         sensor_capture = k4a.k4a_capture_t()
         get_capture_result = k4a.k4a_device_get_capture(device, ctypes.byref(sensor_capture), k4a.K4A_WAIT_INFINITE)
 
-        if get_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_SUCCEEDED:
+        if get_capture_result == k4a.K4A_WAIT_RESULT_SUCCEEDED:
             frame_count += 1
 
             print("Start processing frame {}".format(frame_count))
@@ -82,17 +82,17 @@ if __name__ == "__main__":
 
             k4a.k4a_capture_release(sensor_capture)
 
-            if queue_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
+            if queue_capture_result == k4a.K4A_WAIT_RESULT_TIMEOUT:
                 # It should never hit timeout when K4A_WAIT_INFINITE is set.
                 print("Error! Add capture to tracker process queue timeout!")
                 break
-            elif queue_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_FAILED:
+            elif queue_capture_result == k4a.K4A_WAIT_RESULT_FAILED:
                 print("Error! Add capture to tracker process queue failed!")
                 break
 
             body_frame = k4a.k4abt_frame_t()
             pop_frame_result = k4a.k4abt_tracker_pop_result(tracker, ctypes.byref(body_frame), k4a.K4A_WAIT_INFINITE)
-            if pop_frame_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_SUCCEEDED:
+            if pop_frame_result == k4a.K4A_WAIT_RESULT_SUCCEEDED:
                 num_bodies = k4a.k4abt_frame_get_num_bodies(body_frame)
                 print("{} bodies are detected!".format(num_bodies))
 
@@ -111,14 +111,14 @@ if __name__ == "__main__":
                     print("Error: Fail to generate bodyindex map!")
 
                 k4a.k4abt_frame_release(body_frame)
-            elif pop_frame_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
+            elif pop_frame_result == k4a.K4A_WAIT_RESULT_TIMEOUT:
                 # It should never hit timeout when K4A_WAIT_INFINITE is set.
                 print("Error! Pop body frame result timeout!")
                 break
             else:
                 print("Pop body frame result failed!")
                 break
-        elif get_capture_result == k4a.k4a_wait_result_t.K4A_WAIT_RESULT_TIMEOUT:
+        elif get_capture_result == k4a.K4A_WAIT_RESULT_TIMEOUT:
             # It should never hit timeout when K4A_WAIT_INFINITE is set.
             print("Error! Get depth frame time out!")
             break
