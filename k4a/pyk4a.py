@@ -5,12 +5,12 @@ import sys
 from .enumstruct import StructureWithEnums, CtypeIntEnum
 
 try:
-    _k4a = ctypes.CDLL('k4a.dll')
-except:
+    _k4a = ctypes.CDLL(r'C:\Program Files\Azure Kinect SDK v1.3.0\sdk\windows-desktop\amd64\release\bin\k4a.dll')
+except Exception as e:
     try:
         _k4a = ctypes.CDLL('k4a.so')
-    except:
-        print("Failed to load library")
+    except Exception as ee:
+        print("Failed to load library", e, ee)
         sys.exit(1)
 
 # K4A_DECLARE_HANDLE(k4a_device_t);
@@ -172,7 +172,6 @@ class _k4a_device_configuration_t(StructureWithEnums):
         ("color_format", ctypes.c_int),
         ("color_resolution", ctypes.c_int),
         ("depth_mode", ctypes.c_int),
-        ("color_resolution", ctypes.c_int),
         ("camera_fps", ctypes.c_int),
         ("synchronized_images_only", ctypes.c_bool),
         ("depth_delay_off_color_usec", ctypes.c_int32),

@@ -22,8 +22,8 @@ def VERIFY(result, error):
 
 def print_body_information(body):
     print("Body ID: {}".format(body.id))
-    for i in range(k4a.k4abt_joint_id_t):
-        position = body.skeleton.joints[i].positions
+    for i in range(k4a.k4abt_joint_id_t.K4ABT_JOINT_COUNT):
+        position = body.skeleton.joints[i].position
         orientation = body.skeleton.joints[i].orientation
         confidence_level = body.skeleton.joints[i].confidence_level
         print("Joint[{}]: Position[mm] ( {}, {}, {} ); Orientation ( {}, {}, {}, {}); Confidence Level ({})".format(

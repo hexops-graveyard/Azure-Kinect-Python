@@ -6,12 +6,12 @@ from .pyk4a import k4a_float3_t, k4a_result_t, k4a_wait_result_t, k4a_calibratio
 from .enumstruct import StructureWithEnums, CtypeIntEnum
 
 try:
-    _k4abt = ctypes.CDLL('k4abt.dll')
-except:
+    _k4abt = ctypes.CDLL(r'C:\Program Files\Azure Kinect Body Tracking SDK\sdk\windows-desktop\amd64\release\bin\k4abt.dll')
+except Exception as e:
     try:
         _k4abt = ctypes.CDLL('k4abt.so')
-    except:
-        print("Failed to load library")
+    except Exception as ee:
+        print("Failed to load library", e, ee)
         sys.exit(1)
 
 # K4A_DECLARE_HANDLE(k4abt_tracker_t);
