@@ -9,9 +9,7 @@ Python 3 bindings for the Azure Kinect SDK
 
 ## Setup
 
-### Install the Kinect SDKs, update device firmware version if needed
-
-Install these Kinect SDKs:
+Install the Kinect SDKs, update device firmware version if needed:
 
 * [Sensor SDK v1.4.1](https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/develop/docs/usage.md#installation)
 * [Body tracking SDK v1.0.1](https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download)
