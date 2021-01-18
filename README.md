@@ -9,21 +9,15 @@ Python 3 bindings for the Azure Kinect SDK
 
 ## Setup
 
-### Install the right Kinect SDK, Kinect Body Tracking SDK, and device firmware versions
+### Install the Kinect SDKs, update device firmware version if needed
 
-Please uninstall all unrelated SDK versions if you are having issues. The supported versions are:
+Install these Kinect SDKs:
 
 * [Sensor SDK v1.4.1](https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/develop/docs/usage.md#installation)
 * [Body tracking SDK v1.0.1](https://docs.microsoft.com/en-us/azure/kinect-dk/body-sdk-download)
 * Device firmware version must be at least 1.6.110079014 or higher.
 
-Add the following to your system PATH:
-
-* `C:\Program Files\Azure Kinect SDK v1.4.1\sdk\windows-desktop\amd64\release\bin`
-* `C:\Program Files\Azure Kinect Body Tracking SDK\sdk\windows-desktop\amd64\release\bin`
-* `C:\Program Files\Azure Kinect Body Tracking SDK\tools`
-
-(Or relevant paths for your platform containing the the `k4a(.so|.dll)` and `k4abt(.so|.dll)` dynamic libraries)
+If on Linux, ensure the relevant `k4a.so` and `k4abt.so` dynamic libraries are on your path.
 
 ## Feature support
 
