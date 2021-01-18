@@ -1,17 +1,25 @@
 import ctypes
 import enum
 import sys
+import os
 
 from .pyk4a import k4a_float3_t, k4a_calibration_t, k4a_capture_t, k4a_image_t
 
 try:
-    _k4abt = ctypes.CDLL(r'C:\Program Files\Azure Kinect Body Tracking SDK\sdk\windows-desktop\amd64\release\bin\k4abt.dll')
-except Exception as e:
+    dirPath = os.path.abspath(__file__)+r'/vendor/azure_kinect/windows/amd64/'
+    _k4abt = ctypes.CDLL(dirPath+r'k4abt.dll')
+    os.environ['PATH'] = dirPath+';'+os.environ['PATH']
+except Exception as e1:
     try:
-        _k4abt = ctypes.CDLL('k4abt.so')
-    except Exception as ee:
-        print("Failed to load library", e, ee)
-        sys.exit(1)
+        dirPath = r'C:/Program Files/Azure Kinect Body Tracking SDK/tools/'
+        _k4abt = ctypes.CDLL(dirPath+r'k4abt.dll')
+        os.environ['PATH'] = dirPath+';'+os.environ['PATH']
+    except Exception as e2:
+        try:
+            _k4abt = ctypes.CDLL('k4abt.so')
+        except Exception as e3:
+            print("Failed to load library", e1, e2, e3)
+            sys.exit(1)
 
 # K4A_DECLARE_HANDLE(k4abt_tracker_t);
 class _handle_k4abt_tracker_t(ctypes.Structure):
