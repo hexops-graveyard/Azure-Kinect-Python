@@ -6,7 +6,7 @@ import os
 from .pyk4a import k4a_float3_t, k4a_calibration_t, k4a_capture_t, k4a_image_t
 
 try:
-    dirPath = os.path.abspath(__file__)+r'/vendor/azure_kinect/windows/amd64/'
+    dirPath = os.path.dirname(os.path.abspath(__file__))+r'/../vendor/azure_kinect/windows/amd64/'
     _k4abt = ctypes.CDLL(dirPath+r'k4abt.dll')
     os.environ['PATH'] = dirPath+';'+os.environ['PATH']
 except Exception as e1:

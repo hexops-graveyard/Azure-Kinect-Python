@@ -4,7 +4,8 @@ import sys
 import os
 
 try:
-    dirPath = os.path.abspath(__file__)+r'/vendor/azure_kinect/windows/amd64/'
+    dirPath = os.path.dirname(os.path.abspath(__file__))+r'/../vendor/azure_kinect/windows/amd64/'
+    print(dirPath)
     _k4a = ctypes.CDLL(dirPath+r'k4a.dll')
     os.environ['PATH'] = dirPath+';'+os.environ['PATH']
 except Exception as e1:
